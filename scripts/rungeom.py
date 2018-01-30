@@ -7,7 +7,8 @@ code = sys.argv[1]  # Codigo de petitorio
 table = sys.argv[2]  # Tabla consultada
 name = sys.argv[3]  # Nombre de salida de polygono
 wkid = int(sys.argv[4])  # Codigo EPSG del sistema de referencia
-row = sys.argv[5]
+concession = sys.argv[5]    # Concesion minera
+resignation = sys.argv[6]   # Tipo de renuncia
 
 
 '''
@@ -95,26 +96,51 @@ class MakeGeometry:
         shp.poly(parts=self.coord)
         # Creando campo para asignar el codigo ingresado
         shp.field('CODIGOU', 'C', '40')
+        shp.field('CONCESION', 'C', '50')
         shp.field('TIPO_RENUN', 'C', '40')
+        shp.field('HAS', 'N', decimal=4)
+
         # Registrando el codigo dentro del campo
-        shp.record(code, row)
+        shp.record(code, concession, resignation, None)
         # Almacenando shapefile segun parametro 'output'
         shp.save(output)
+
+        shp = shapefile.Reader(output)
+        temp = shp.shape(0)
+        geojson = temp.__geo_interface__
+
+        from shapely.geometry import shape
+
+        area = shape(geojson).area/10000
+
+        e = shapefile.Editor(output)
+        self.modify('HAS', area, e)
+        e.save(output)
+
         # Eliminando la variable shp
-        #del shp
+        del shp
         # Adignando Sistema de referencia
         self.getSpatialReference()
 
+
+    def modify(self, key, value, e):
+        for i in e.records[0]:
+            if not i:
+                idx = e.records[0].index(i)
+                e.records[0][idx] = value
+                break
+
+
     # Metodo principal del objeto
     def main(self):
-        # # Intentar
-        # try:
-        #     # Ejecutar proceso
-        self.generatePolygon()
-        # # Si se obtiene un error
-        # except Exception as e:
-        #     # Imprime la causa del error
-        #     print e
+        # Intentar
+        try:
+            # Ejecutar proceso
+            self.generatePolygon()
+        # Si se obtiene un error
+        except Exception as e:
+            # Imprime la causa del error
+            print e
 
 
 # Si se ejecuta el archivo actual
