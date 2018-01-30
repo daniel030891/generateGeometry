@@ -7,6 +7,7 @@ code = sys.argv[1]  # Codigo de petitorio
 table = sys.argv[2]  # Tabla consultada
 name = sys.argv[3]  # Nombre de salida de polygono
 wkid = int(sys.argv[4])  # Codigo EPSG del sistema de referencia
+row = sys.argv[5]
 
 
 '''
@@ -55,14 +56,14 @@ class GetData:
 
     # Metodo principal del oobjeto actual
     def main(self):
-        # Intenta
-        try:
-            # Ejecuta el proceso
-            self.getCoordsOfTable()
-        # Si se obtiene un error
-        except Exception as e:
-            # Imprime el error
-            print e
+        # # Intenta
+        # try:
+        #     # Ejecuta el proceso
+        self.getCoordsOfTable()
+        # # Si se obtiene un error
+        # except Exception as e:
+        #     # Imprime el error
+        #     print e
 
 
 '''
@@ -94,25 +95,26 @@ class MakeGeometry:
         shp.poly(parts=self.coord)
         # Creando campo para asignar el codigo ingresado
         shp.field('CODIGOU', 'C', '40')
+        shp.field('TIPO_RENUN', 'C', '40')
         # Registrando el codigo dentro del campo
-        shp.record(code)
+        shp.record(code, row)
         # Almacenando shapefile segun parametro 'output'
         shp.save(output)
         # Eliminando la variable shp
-        del shp
+        #del shp
         # Adignando Sistema de referencia
         self.getSpatialReference()
 
     # Metodo principal del objeto
     def main(self):
-        # Intentar
-        try:
-            # Ejecutar proceso
-            self.generatePolygon()
-        # Si se obtiene un error
-        except Exception as e:
-            # Imprime la causa del error
-            print e
+        # # Intentar
+        # try:
+        #     # Ejecutar proceso
+        self.generatePolygon()
+        # # Si se obtiene un error
+        # except Exception as e:
+        #     # Imprime la causa del error
+        #     print e
 
 
 # Si se ejecuta el archivo actual

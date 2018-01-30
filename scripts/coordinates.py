@@ -35,11 +35,11 @@ class CoordenadaDet(Tb_CoordenadaDet):
                 pass
 
         if src == 'wgs':
-            self.fields[-1] = self.cd_corest_e
-            self.fields[-2] = self.cd_cornor_e
+            self.fields[-1] = self.cd_cornor_e
+            self.fields[-2] = self.cd_corest_e
         elif src == 'psad':
-            self.fields[-1] = self.cd_corest
-            self.fields[-2] = self.cd_cornor
+            self.fields[-1] = self.cd_cornor
+            self.fields[-2] = self.cd_corest
 
         self.sql = self.sql.format(
             ', '.join(self.fields),
@@ -94,11 +94,11 @@ class FraccionadosDet(Vw_FraccionadosDet):
 
 
         if src == 'wgs':
-            self.fields[-1] = self.fd_corest_e
-            self.fields[-2] = self.fd_cornor_e
+            self.fields[-1] = self.fd_cornor_e
+            self.fields[-2] = self.fd_corest_e
         elif src == 'psad':
-            self.fields[-1] = self.fd_corest
-            self.fields[-2] = self.fd_cornor
+            self.fields[-1] = self.fd_cornor
+            self.fields[-2] = self.fd_corest
 
         self.sql = self.sql.format(
             ', '.join(self.fields),
