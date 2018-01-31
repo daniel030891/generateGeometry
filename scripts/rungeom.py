@@ -7,8 +7,8 @@ code = sys.argv[1]  # Codigo de petitorio
 table = sys.argv[2]  # Tabla consultada
 name = sys.argv[3]  # Nombre de salida de polygono
 wkid = int(sys.argv[4])  # Codigo EPSG del sistema de referencia
-concession = sys.argv[5]    # Concesion minera
-resignation = sys.argv[6]   # Tipo de renuncia
+concession = sys.argv[5].replace("/", " ")    # Concesion minera
+resignation = sys.argv[6].replace("/", " ")   # Tipo de renuncia
 
 
 '''
@@ -88,20 +88,21 @@ class MakeGeometry:
         # Copiar el prj en la ubicacion adecuada
         shutil.copy(prjfile, os.path.join(os.path.dirname(output), prj))
 
-    # Construye el archivo shapefile
+    # Construye el archivo shapefile 
     def generatePolygon(self):
         # Iniciando la escritura del nuevo shapefile
         shp = shapefile.Writer(shapefile.POLYGON)
         # Agregando coordenadas
         shp.poly(parts=self.coord)
-        # Creando campo para asignar el codigo ingresado
+        # Creando campos para asignar el codigo ingresado
+        shp.field('OBJECTID', 'N', decimal=0)
         shp.field('CODIGOU', 'C', '40')
         shp.field('CONCESION', 'C', '50')
         shp.field('TIPO_RENUN', 'C', '40')
         shp.field('HAS', 'N', decimal=4)
 
         # Registrando el codigo dentro del campo
-        shp.record(code, concession, resignation, None)
+        shp.record(1, code, concession, resignation, None)
         # Almacenando shapefile segun parametro 'output'
         shp.save(output)
 
@@ -137,7 +138,7 @@ class MakeGeometry:
         try:
             # Ejecutar proceso
             self.generatePolygon()
-        # Si se obtiene un error
+        # # Si se obtiene un error
         except Exception as e:
             # Imprime la causa del error
             print e
